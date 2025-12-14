@@ -50,7 +50,7 @@ sudo usermod -aG docker $USER
 ```bash
 curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
 ```
-- verify with `k3d --version`, notice the previous command also installed k3s
+- verify with `k3d --version`, notice that the previous command also installed k3s.
 
 ## 3. Install kubectl
 
@@ -60,22 +60,44 @@ sudo dnf install kubectl
 ```
 This will actually install the latest `kubernetes1.xx-client` package. Current version being 1.34.
 
-## 4. Create a test cluster 
+---
+
+# Create a cluster with one command
 
 ```bash
 k3d cluster create mycluster
 ```
+
 This command creates a k3d cluster, but it actually does multiple things:
   - it creates a docker network
   - it spins up a server node (or control plane)
   - it sets up a load balancer
   - it configures our kubeconfig file to connect kubectl to this cluster
 
-The above command has created a single-node cluster which contains 7 pods, among which we have:
+With only one command, K3d has configured for us a fully functional k3s Kubernetes cluster in a matter of seconds.  
+
+# Default pods in a K3d cluster
+
+The above command has created a single-node cluster which contains 7 default pods:
 - coredns: handles DNS resolution within the cluster
-- traefik: the ingress controller
-- local-path-provisioner: to create persistent volumes
+- helm-install-traefik-crd & helm-install-traefik: required to install the Traefik ingress controller 
+- local-path-provisioner: so we can provisoin persistent volumes
+- metrics-server: provides container resource metrics like CPU and memory usage 
+- svclb-traefik: provides external IPs for load balancers when we create them
+- traefik: the Traefik ingress controller itself
+
+## Playing with our first cluster
+
+- We can run a test deployment: `kubectl create deployment nginx --image=nginx`
+- Then, we can see the corresponding container creation by running `kubectl get pods`
+- And we can expose that service on port 80: `kubectl expose deployment nginx --port=80 --type=ClusterIP`
+- We can now see our newly created service by running `kubectl get svc`
+
+# Essential commands for managing k3d
+
+We've created a cluster and deployed our first application to it. Now, let's learn some useful k3d commands:
+- to list all clusters: `k3d cluster list`
+- to stop a cluster without deleting it: `k3d cluster stop mycluster`
 - 
 
-
-1/16
+4/16
