@@ -2,9 +2,10 @@
 
 The goal of this tutorial is to set up a homelab on a Fedora 43 machine for preparing the **CKA exam**.  
 
-## Resources
+## Learning Resources
 
-- https://www.youtube.com/watch?v=ErhVmAEOUBM
+- K3D Kubernetes Tutorial: Local Clusters in Seconds - https://www.youtube.com/watch?v=ErhVmAEOUBM
+- https://www.udemy.com/course/certified-kubernetes-administrator-with-practice-tests/
 - https://kodekloud.com/
 - https://killercoda.com
 
@@ -74,11 +75,11 @@ This command creates a k3d cluster, but it actually does multiple things:
   - it sets up a load balancer
   - it configures our kubeconfig file to connect kubectl to this cluster
 
-With only one command, K3d has configured for us a fully functional k3s Kubernetes cluster in a matter of seconds.  
+With only one command, K3d has configured for us a fully functional k3s cluster in a matter of seconds.  
 
 # Default pods in a K3d cluster
 
-The above command has created a single-node cluster which contains 7 default pods:
+The above command has created a single-node cluster which contains 7 pods:
 - coredns: handles DNS resolution within the cluster
 - helm-install-traefik-crd & helm-install-traefik: required to install the Traefik ingress controller 
 - local-path-provisioner: so we can provisoin persistent volumes
@@ -98,6 +99,30 @@ The above command has created a single-node cluster which contains 7 default pod
 We've created a cluster and deployed our first application to it. Now, let's learn some useful k3d commands:
 - to list all clusters: `k3d cluster list`
 - to stop a cluster without deleting it: `k3d cluster stop mycluster`
-- 
+- to start a cluster: `k3d cluster start mycluster`
+- to delete a cluster: `k3d cluster delete mycluster`
 
-4/16
+# Creating a multi-node k3d cluster
+
+To create a multi-node cluster with 1 control plane and 2 worker nodes:
+```bash
+k3d cluster create multinode-cluster --servers 1 --agents 2
+```
+
+We can also create a cluster from a config file:
+```bash
+k3d cluster create --config my-cluster-config.yaml
+```
+
+To add a worker node to an existing cluster: 
+```bash
+k3d node create new-worker --cluster multinode-cluster --role agent
+```
+
+To remove a worker node from a cluster:
+```bash
+k3d node delete k3d-multinode-cluster-agent-1
+```
+
+
+12/16
