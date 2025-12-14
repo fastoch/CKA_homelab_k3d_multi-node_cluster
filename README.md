@@ -2,11 +2,11 @@
 
 The goal of this tutorial is to set up a homelab on a Fedora 43 machine for preparing the **CKA exam**.  
 
-## Useful resources
+## Resources
 
+- https://www.youtube.com/watch?v=ErhVmAEOUBM
 - https://kodekloud.com/
 - https://killercoda.com
-- https://www.youtube.com/watch?v=ErhVmAEOUBM
 
 ## What is K3s? 
 
@@ -67,4 +67,15 @@ k3d cluster create mycluster
 ```
 This command creates a k3d cluster, but it actually does multiple things:
   - it creates a docker network
-  - 
+  - it spins up a server node (or control plane)
+  - it sets up a load balancer
+  - it configures our kubeconfig file to connect kubectl to this cluster
+
+The above command has created a single-node cluster which contains 7 pods, among which we have:
+- coredns: handles DNS resolution within the cluster
+- traefik: the ingress controller
+- local-path-provisioner: to create persistent volumes
+- 
+
+
+1/16
