@@ -6,6 +6,7 @@ The goal of this tutorial is to set up a homelab on a Fedora 43 machine for prep
 
 - https://kodekloud.com/
 - https://killercoda.com
+- https://www.youtube.com/watch?v=ErhVmAEOUBM
 
 ## What is K3s? 
 
@@ -28,7 +29,9 @@ k3d uses lightweight k3s, skipping full **kubeadm** bootstrapping or advanced **
 
 ---
 
-# 1. Installing Docker on Fedora 43
+# Setting up my CKA homelab
+
+## 1. Install Docker on Fedora 43
 
 - check if docker is already installed: `docker version`
 - if not, add the docker repo, install docker components, enable docker service, and add your user to the docker group:
@@ -38,6 +41,30 @@ sudo dnf install docker-ce docker-ce-cli containerd.io docker-buildx-plugin dock
 sudo systemctl enable --now docker
 sudo usermod -aG docker $USER
 ```
-- Log out and back in for group changes.
-- Verify installation with `docker version`.​
+- Reboot
+- Verify installation with `docker version`​
 
+## 2. Install K3d
+
+- Run the official install script for the latest version:
+```bash
+curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
+```
+- verify with `k3d --version`, notice the previous command also installed k3s
+
+## 3. Install kubectl
+
+kubectl is the Kubernetes command-line tool.  
+```bash
+sudo dnf install kubectl
+```
+This will actually install the latest `kubernetes1.xx-client` package. Current version being 1.34.
+
+## 4. Create a test cluster 
+
+```bash
+k3d cluster create mycluster
+```
+This command creates a k3d cluster, but it actually does multiple things:
+  - it creates a docker network
+  - 
