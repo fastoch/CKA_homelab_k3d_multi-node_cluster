@@ -108,21 +108,31 @@ To create a multi-node cluster with 1 control plane and 2 worker nodes:
 ```bash
 k3d cluster create multinode-cluster --servers 1 --agents 2
 ```
+**Reminder**:
+- server node = control plane
+- agent node = worker node
 
-We can also create a cluster from a config file:
+## Create a cluster from a config file
+
 ```bash
 k3d cluster create --config my-cluster-config.yaml
 ```
+
+You can then check that your config was properly applied with:
+```bash
+kubectl get nodes
+docker ps
+```
+
+## Adding or removing workers
 
 To add a worker node to an existing cluster: 
 ```bash
 k3d node create new-worker --cluster multinode-cluster --role agent
 ```
 
-To remove a worker node from a cluster:
+To remove a specific worker node from a cluster:
 ```bash
+kubectl get nodes
 k3d node delete k3d-multinode-cluster-agent-1
 ```
-
-
-12/16
